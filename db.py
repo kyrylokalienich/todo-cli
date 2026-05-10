@@ -53,3 +53,16 @@ def delete_task(task_id: int):
         print(f"✓ Задачу #{task_id} видалено.")
     else:
         print(f"Задачу #{task_id} не знайдено.")
+
+def search_tasks(keyword: str):
+    with get_connection() as conn:
+        rows = conn.execute(
+            "SELECT id, title, done FROM tasks WHERE title LIKE ? ORDER BY id",
+            (f"%{keyword}%",)
+        ).fetchall()
+    if not rows:
+        print(f'Нічого не знайдено за запитом: "{keyword}"')
+        return
+    for row in rows:
+        status = "✓" if row[2] else "○"
+        print(f"  [{row[0]}] {status} {row[1]}")
