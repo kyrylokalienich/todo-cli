@@ -18,6 +18,9 @@ def main():
     del_parser = subparsers.add_parser("delete", help="Видалити задачу")
     del_parser.add_argument("task_id", type=int, help="ID задачі")
 
+    search_parser = subparsers.add_parser("search", help="Пошук задач за ключовим словом")
+    search_parser.add_argument("keyword", help="Слово для пошуку")
+
     args = parser.parse_args()
 
     if args.command == "add":
@@ -28,6 +31,8 @@ def main():
         db.complete_task(args.task_id)
     elif args.command == "delete":
         db.delete_task(args.task_id)
+    elif args.command == "search":
+        db.search_tasks(args.keyword)
     else:
         parser.print_help()
 
