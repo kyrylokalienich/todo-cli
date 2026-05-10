@@ -31,3 +31,25 @@ def list_tasks():
     for row in rows:
         status = "✓" if row[2] else "○"
         print(f"  [{row[0]}] {status} {row[1]}")
+
+def complete_task(task_id: int):
+    with get_connection() as conn:
+        cursor = conn.execute(
+            "UPDATE tasks SET done = 1 WHERE id = ?", (task_id,)
+        )
+        conn.commit()
+    if cursor.rowcount:
+        print(f"✓ Задачу #{task_id} позначено як виконану.")
+    else:
+        print(f"Задачу #{task_id} не знайдено.")
+
+def delete_task(task_id: int):
+    with get_connection() as conn:
+        cursor = conn.execute(
+            "DELETE FROM tasks WHERE id = ?", (task_id,)
+        )
+        conn.commit()
+    if cursor.rowcount:
+        print(f"✓ Задачу #{task_id} видалено.")
+    else:
+        print(f"Задачу #{task_id} не знайдено.")
