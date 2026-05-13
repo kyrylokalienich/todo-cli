@@ -1,6 +1,7 @@
 import argparse
 import db
 
+
 def main():
     db.init_db()
 
@@ -14,6 +15,25 @@ def main():
     
     done_parser = subparsers.add_parser("done", help="Позначити задачу виконаною")
     done_parser.add_argument("task_id", type=int, help="ID задачі")
+
+    status_parser = subparsers.add_parser("update-status", help="Оновити статус задачі")
+    status_parser.add_argument("task_id", type=int, help="ID задачі")
+    status_parser.add_argument(
+        "status",
+        choices=db.TaskStatus.names(),
+        help="Новий статус задачі (ToDo, InProgress, Done, Hold, Blocked)",
+    )
+
+    completion_parser = subparsers.add_parser(
+        "update-completion",
+        help="Оновити відсоток виконання задачі",
+    )
+    completion_parser.add_argument("task_id", type=int, help="ID задачі")
+    completion_parser.add_argument(
+        "percent",
+        type=int,
+        help="Відсоток завершення (0-100)",
+    )
 
     del_parser = subparsers.add_parser("delete", help="Видалити задачу")
     del_parser.add_argument("task_id", type=int, help="ID задачі")
@@ -29,12 +49,17 @@ def main():
         db.list_tasks()
     elif args.command == "done":
         db.complete_task(args.task_id)
+    elif args.command == "update-status":
+        db.update_status(args.task_id, args.status)
+    elif args.command == "update-completion":
+        db.update_completion(args.task_id, args.percent)
     elif args.command == "delete":
         db.delete_task(args.task_id)
     elif args.command == "search":
         db.search_tasks(args.keyword)
     else:
         parser.print_help()
+
 
 if __name__ == "__main__":
     main()
