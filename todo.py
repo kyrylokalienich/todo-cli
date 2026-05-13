@@ -20,7 +20,7 @@ def main():
     status_parser.add_argument("task_id", type=int, help="ID задачі")
     status_parser.add_argument(
         "status",
-        choices=db.TaskStatus.names(),
+        type=db.validate_status,
         help="Новий статус задачі (ToDo, InProgress, Done, Hold, Blocked)",
     )
 
